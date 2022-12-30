@@ -1,0 +1,23 @@
+version: '3'
+services:
+  firebird-server:
+    image: jacobalberty/firebird:2.5-ss
+    ports:
+      - 3050:3050
+    restart: always
+    environment:
+      - ISC_PASSWORD=masterkey
+    volumes:
+      - ./databases:/firebird/data
+
+  php-apache:
+    container_name: contracheque-online-firebird
+    build: .
+    ports:
+      - 8080:80
+    restart: always
+    links:
+      - firebird-server
+    volumes:
+      - ./app:/var/www/html
+    working_dir: /var/www/html
